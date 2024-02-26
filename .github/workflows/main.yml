@@ -11,8 +11,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Sync files to server
-        run: >
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./
-          root@172.21.1.91:/var/www/git
+        run: echo "helloooo"
         env:
           SSH_PRIVATE_KEY: '${{ secrets.TEST_PRIVATE_KEY }}'
