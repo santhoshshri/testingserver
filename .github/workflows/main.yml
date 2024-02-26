@@ -24,4 +24,4 @@ jobs:
           port: 22
           script: |
             cd /var/www/testingserver/
-            date
+            git pull origin main -f
