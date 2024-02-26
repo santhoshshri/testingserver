@@ -1,0 +1,21 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy Code to Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Sync files to server
+        run: |
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ root@172.21.1.91:/var/www/git
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
