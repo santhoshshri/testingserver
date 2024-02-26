@@ -16,5 +16,4 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y rsync
       - name: Rsync to Server
         run: >-
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i
-          /github/home/.ssh/test" ./ root@172.21.1.91:/var/www/git
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i" ./ root@172.21.1.91:/var/www/git
