@@ -21,4 +21,4 @@ jobs:
       - name: Rsync files to server
         run: >
           rsync -avz -e "ssh -o StrictHostKeyChecking=yes" ./
-          root@remote-server.com:/var/www/git
+          root@172.21.1.91:/var/www/git
