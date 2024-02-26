@@ -1,17 +1,24 @@
-name: Rsync to Server
+name: Deploy to Server
 'on':
   push:
     branches:
       - main
 jobs:
   deploy:
-    name: Deploy to Server
+    name: Deploy to Remote Server
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Install rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
-      - name: Rsync to Server
-        run: >-
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i" ./ root@172.21.1.91:/var/www/git
+      - name: Configure SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: '${{ secrets.SSH_PRIVATE_KEY }}'
+      - name: Add remote host to known_hosts
+        run: 'echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts'
+      - name: Rsync files to server
+        run: >
+          rsync -avz -e "ssh -o StrictHostKeyChecking=yes" ./
+          root@remote-server.com:/var/www/git
