@@ -10,15 +10,20 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: '${{ secrets.SSH_PRIVATE_KEY }}'
+          SSH_KNOWN_HOSTS: '${{ secrets.SSH_KNOWN_HOSTS }}'
       - name: Install rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
-      - name: Configure SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: '${{ secrets.SSH_PRIVATE_KEY }}'
-      - name: Add remote host to known_hosts
-        run: 'echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts'
       - name: Rsync files to server
         run: >
           rsync -avz -e "ssh -o StrictHostKeyChecking=yes" ./
           root@172.21.1.91:/var/www/git
+
