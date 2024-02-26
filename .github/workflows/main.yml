@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          ssh-private-key: '${{ secrets.TEST_PRIVATE_KEY }}'
       - name: Install rsync
         run: sudo apt-get update && sudo apt-get install -y rsync
       - name: Rsync to Server
