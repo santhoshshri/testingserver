@@ -1,16 +1,20 @@
-name: Deploy to Server
+name: Rsync to Server
 'on':
   push:
     branches:
       - main
 jobs:
   deploy:
-    name: Deploy Code to Server
+    name: Deploy to Server
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Sync files to server
-        run: echo "helloooo"
-        env:
-          SSH_PRIVATE_KEY: '${{ secrets.TEST_PRIVATE_KEY }}'
+        with:
+          ssh-private-key: '${{ secrets.TEST_PRIVATE_KEY }}'
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+      - name: Rsync to Server
+        run: >-
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i
+          /github/home/.ssh/test" ./ root@172.21.1.91:/var/www/git
