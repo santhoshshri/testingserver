@@ -17,6 +17,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
 	  key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
-          script: whoami
           command_timeout: 20m
           script: whoami
