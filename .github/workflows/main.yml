@@ -1,34 +1,22 @@
-name: remote ssh command
+name: Deploy to remote server
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  testing01:
-    name: default flag testing
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout
-        uses: actions/checkout@v1
-
-      - name: correct password but wrong key
-        uses: ./
+      - name: Connect to remote server via SSH
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+	  key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: whoami
-
-      - name: wrong password but correct key
-        uses: ./
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: "abcdef"
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
+          command_timeout: 20m
           script: whoami
-
