@@ -15,7 +15,7 @@ jobs:
         
       - name: Sync with Remote Server
         run: |
-          rsync -avz -e 'ssh -i ${{ secrets.SSH_PRIVATE_KEY }}' --exclude='.git/' ./ root@172.21.1.91:/var/www/testingserver/
+          rsync -avz -e 'ssh -i ${{ secrets.SSH_PRIVATE_KEY }}' --exclude='.git/' ./ root@DESKTOP-11KN3U9:/var/www/testingserver/
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
