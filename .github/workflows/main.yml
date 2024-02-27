@@ -1,4 +1,4 @@
-name: Deploy to remote server
+name: Sync with Remote Server
 
 on:
   push:
@@ -6,18 +6,16 @@ on:
       - main
 
 jobs:
-  deploy:
+  rsync:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Connect to remote server via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
-          command_timeout: 20m
-          script: |
-            whoami
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Sync with Remote Server
+        run: |
+          rsync -avz -e 'ssh -i ${{ secrets.SSH_PRIVATE_KEY }}' --exclude='.git/' ./ root@172.21.1.91:/var/www/testingserver/
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
