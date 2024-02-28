@@ -1,4 +1,4 @@
-name: Create Directory on Remote Server
+name: SSH to Remote Server
 
 on:
   push:
@@ -6,18 +6,20 @@ on:
       - main
 
 jobs:
-  create_directory:
+  ssh_to_remote_server:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      - name: Run commands on remote server
+        
+      - name: SSH into Remote Server and Execute Commands
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.HOST }}  # Replace with your remote server hostname or IP
+          username: ${{ secrets.USERNAME }}  # Replace with your SSH username
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Replace with the SSH private key stored in GitHub Secrets
+          port: ${{ secrets.PORT }}  # Replace with your SSH port
           script: |
             ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-            ssh -i -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "mkdir -p /var/www/testingserver/go"
+            ssh -i ${{ secrets.SSH_PRIVATE_KEY }} -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "mkdir -p /var/www/testingserver/go"
