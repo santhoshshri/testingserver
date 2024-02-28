@@ -7,7 +7,7 @@ on:
 
 jobs:
   check-node:
-    runs-on: ubuntu-latest
+    runs-on: centos-latest
     steps:
       - name: Check Node.js availability
         run: |
