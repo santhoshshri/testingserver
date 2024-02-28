@@ -11,12 +11,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Create known_hosts file
-      run: mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-
-    - name: Add SSH host key to known_hosts
-      run: ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
-
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
