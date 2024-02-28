@@ -1,26 +1,24 @@
-name: Sync Git Workspace with Testing Server
+---
 
-on:
+name: CI
+
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - main
+      - master
+  pull_request:
+    branches:
+      - master
+
+  workflow_dispatch: ~
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-
+    container:
+      image: ubuntu:latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Create known_hosts file
-      run: mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-      
-    - name: Sync Git Workspace with Testing Server
-      run: |
-        ssh-keyscan -p ${{ secrets.PORT }} -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        rsync --timeout=60 -avz -e "ssh -i ~/.ssh/id_rsa -p ${{ secrets.PORT }} -o StrictHostKeyChecking=no" $GITHUB_WORKSPACE/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/testingserver/
-      env:
-        GITHUB_WORKSPACE: ${{ github.workspace }}
+      - uses: actions/checkout@v3
+      - run: |
+          echo ${{ github.workspace }}
+          echo $GITHUB_WORKSPACE
