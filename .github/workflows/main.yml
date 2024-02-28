@@ -18,4 +18,4 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          rsync -avz -e "ssh -i ~/.ssh/id_rsa" --exclude='.git/' ./ root@DESKTOP-11KN3U9:/var/www/testingserver/
+          rsync -avz -e "ssh -i ~/.ssh/id_rsa" --exclude='.git/' ./ root@172.21.1.91:/var/www/testingserver/
