@@ -12,6 +12,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Create known_hosts file
+      run: mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
       
     - name: Sync Git Workspace with Testing Server
       run: |
