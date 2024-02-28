@@ -1,7 +1,7 @@
 name: 'Node CI'
 
 on:
-  - 'push'
+  - push
 
 jobs:
   build:
@@ -9,17 +9,27 @@ jobs:
 
     steps:
     - name: Checkout code
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
+
+    - name: Create known_hosts file
+      run: mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
+
+    - name: Add SSH host key to known_hosts
+      run: ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16.x'
+
     - name: Install npm dependencies
       run: npm install
+
     - name: Run build task
       run: npm run build --if-present
-    - name: 'Deploy to Staging server'
-      uses: 'easingthemes/ssh-deploy@main'
+
+    - name: Deploy to Staging server
+      uses: easingthemes/ssh-deploy@main
       with:
         SSH_PRIVATE_KEY: '${{ secrets.SSH_PRIVATE_KEY }}'
         ARGS: '-rlgoDzvc -i'
@@ -28,4 +38,5 @@ jobs:
         REMOTE_USER: '${{ secrets.REMOTE_USER }}'
         REMOTE_PORT: '${{ secrets.REMOTE_PORT }}'
         EXCLUDE: '/dist/, /node_modules/'
+
         
