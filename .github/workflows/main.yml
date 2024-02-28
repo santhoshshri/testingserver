@@ -6,10 +6,7 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-
+  
     - name: Deploy to Staging server
     uses: easingthemes/ssh-deploy@main
     with:
