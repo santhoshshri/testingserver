@@ -11,9 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.PUSH_TOKEN }}
-
+        
       - name: Commit built assets
         run: |
           git config --local user.email "action@github.com"
