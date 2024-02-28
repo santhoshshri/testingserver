@@ -1,29 +1,29 @@
-name: Configure SSH Key
+name: Deploy to Remote Server
 
 on:
   push:
     branches:
-      - main
+      - main  # Adjust the branch as needed
 
 jobs:
-  configure-ssh-key:
-    runs-on: ubuntu-latest
-    
+  deploy:
+    runs-on: ubuntu-latest  # Use an appropriate runner based on your requirements
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Attempt SSH connection to the server
-        run: ssh -o "StrictHostKeyChecking=no" -p 7102 root@172.21.1.91 << EOF
-             mkdir go
-             EOF
+      - name: Install rsync
+        run: sudo apt-get install rsync -y  # Install rsync on the runner
 
-
-      - name: Configure SSH key
+      - name: Sync repository with remote server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
+          # Add your remote server to known_hosts
+          ssh-keyscan -p 7102 -H 172.21.1.91 >> ~/.ssh/known_hosts
+          # Perform rsync to sync the repository with the remote server
+          rsync -e "ssh -p 7102" -avz --delete ./ root@172.21.1.91:/var/www/testingserver/
