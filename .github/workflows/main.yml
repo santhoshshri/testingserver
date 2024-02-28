@@ -1,24 +1,6 @@
-name: Create Directory on Remote Server
+vars:
+  host: "{{ lookup('env', 'HOST') }}"
 
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  create_directory:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Run commands on remote server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-            ssh -i ${{ secrets.SSH_KEY }} -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "mkdir -p /var/www/testingserver/go"
+commands:
+  - name: Perform SSH key scan and add to known hosts
+    ssh_keyscan: "{{ host }}"
