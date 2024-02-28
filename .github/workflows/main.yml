@@ -1,4 +1,4 @@
-name: Check Editors Availability
+name: Deploy to Server
 
 on:
   push:
@@ -6,9 +6,21 @@ on:
       - main
 
 jobs:
-  check-node:
-    runs-on: centos-latest
+  deploy:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Check Node.js availability
-        run: |
-          node --version >/dev/null 2>&1 && echo "Node.js is installed at $(which node)" || echo "Node.js is not installed"
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Log repository contents
+      run: ls -l $GITHUB_WORKSPACE
+
+    - name: Install rsync
+      run: sudo apt-get install rsync -y
+
+    - name: Deploy to server
+      run: |
+        rsync -avz --delete $GITHUB_WORKSPACE user@your-server:/var/www/testingserver/
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
