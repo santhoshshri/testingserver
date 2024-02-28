@@ -1,23 +1,19 @@
-name: Deploy to Remote Server
+name: Check Editors Availability
 
 on:
   push:
     branches:
-      - main  # Adjust the branch as needed
+      - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest  # Use an appropriate runner based on your requirements
+  check_editors:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install rsync
-        run: sudo apt-get install rsync -y  # Install rsync on the runner
-
-      - name: Sync repository with remote server
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Check if vi is installed
         run: |
-          rsync -e "ssh -p 7102" -avz --delete ./ root@172.21.1.91:/var/www/testingserver/
+          command -v vi && echo "vi installed" || echo "vi not installed"
+
+      - name: Check if nano is installed
+        run: |
+          command -v nano && echo "nano installed" || echo "nano not installed"
