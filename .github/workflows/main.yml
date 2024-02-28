@@ -21,8 +21,8 @@ jobs:
         ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        rsync --timeout=60 -avz -e "ssh -p ${{ secrets.PORT }}" $GITWORKSPACE/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/testingserver/
+        rsync --timeout=60 -avz -e "ssh -p ${{ secrets.PORT }}" $GITHUB_WORKSPACE/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/testingserver/
       env:
-        GITWORKSPACE: ${{ github.workspace }}
+        GITHUB_WORKSPACE: ${{ github.workspace }}
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
