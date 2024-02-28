@@ -9,12 +9,15 @@ jobs:
   create_directory:
     runs-on: ubuntu-latest
     steps:
-      - name: Connect to Remote Server and Create Directory
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Run commands on remote server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
-            ssh -v -i "${{ secrets.SSH_PRIVATE_KEY }}" -p "${{ secrets.PORT }}" "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}" "cd /var/www/testingserver/ && mkdir go"
+            ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+            ssh -i ${{ secrets.SSH_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "mkdir -p /var/www/testingserver/go"
