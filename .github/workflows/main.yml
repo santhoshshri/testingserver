@@ -1,26 +1,19 @@
 ---
+name: 'Node CI'
+'on':
+  - 'push'
+jobs:
+  build:
+    - name: 'Deploy to Staging server'
+      uses: 'easingthemes/ssh-deploy@main'
+      with:
+        SSH_PRIVATE_KEY: '${{ secrets.SSH_PRIVATE_KEY }}'
+        ARGS: '-rlgoDzvc -i'
+        SOURCE: 'dist/'
+        REMOTE_HOST: '${{ secrets.REMOTE_HOST }}'
+        REMOTE_USER: '${{ secrets.REMOTE_USER }}'
+        REMOTE_PORT: '${{ secrets.REMOTE_PORT }}'
+        EXCLUDE: '/dist/, /node_modules/'
+        SCRIPT_BEFORE: "whoami\nls -al\n"
+        SCRIPT_AFTER: "whoami\nls -al\necho $RSYNC_STDOUT\n"
 
-name: CI
-
-on:  # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - main
-  
-    - name: Deploy to Staging server
-    uses: easingthemes/ssh-deploy@main
-    with:
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      ARGS: "-rlgoDzvc -i"
-      SOURCE: "dist/"
-      REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-      REMOTE_USER: ${{ secrets.REMOTE_USER }}
-      REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
-      EXCLUDE: "/dist/, /node_modules/"
-      SCRIPT_BEFORE: |
-        whoami
-        ls -al
-      SCRIPT_AFTER: |
-        whoami
-        ls -al
-        echo $RSYNC_STDOUT
