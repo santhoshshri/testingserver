@@ -14,7 +14,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Attempt SSH connection to the server
-        run: ssh -o "StrictHostKeyChecking=no" -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit || true
+        run: ssh -o "StrictHostKeyChecking=no" -p 7102 root@172.21.1.91 << EOF
+             mkdir go
+             EOF
 
 
       - name: Configure SSH key
