@@ -21,6 +21,6 @@ jobs:
 
     - name: Deploy to server
       run: |
-        rsync -avz --delete $GITHUB_WORKSPACE user@your-server:/var/www/testingserver/
+        rsync -avz --delete -e "ssh -p 7102" $GITHUB_WORKSPACE/ root@172.21.1.91:/var/www/testingserver/
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
