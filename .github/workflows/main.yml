@@ -17,5 +17,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/testingserver/
-            mkdir go
+            ssh -v -i ${{ secrets.SSH_PRIVATE_KEY }} -p ${{ secrets.PORT }} ${secrets.USERNAME}@${secrets.HOST} "cd /var/www/testingserver/ && mkdir go"
