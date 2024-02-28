@@ -13,9 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - name: Sync with Remote Server
+      - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          rsync -avz -e "ssh -i ~/.ssh/id_rsa" --exclude='.git/' ./ root@172.21.1.91:/var/www/testingserver/
+          ssh-keyscan -H 172.21.1.91 >> ~/.ssh/known_hosts
+          
+      - name: Sync with Remote Server
+        run: |
+          rsync -avz --exclude='.git/' ./ root@172.21.1.91:/var/www/testingserver/
