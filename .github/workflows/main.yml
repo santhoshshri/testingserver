@@ -6,14 +6,10 @@ on:
       - main
 
 jobs:
-  check_editors:
+  check-node:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check if vi is installed
+      - name: Check Node.js availability
         run: |
-          command -v vi && echo "vi installed" || echo "vi not installed"
+          node --version >/dev/null 2>&1 && echo "Node.js is installed" || echo "Node.js is not installed"
 
-      - name: Check if nano is installed
-        run: |
-          command -v nano && echo "nano installed" || echo "nano not installed"
