@@ -11,5 +11,4 @@ jobs:
     steps:
       - name: Check Node.js availability
         run: |
-          node --version >/dev/null 2>&1 && echo "Node.js is installed" || echo "Node.js is not installed"
-
+          node --version >/dev/null 2>&1 && echo "Node.js is installed at $(which node)" || echo "Node.js is not installed"
