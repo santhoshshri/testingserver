@@ -1,4 +1,4 @@
-name: Display SSH private key
+name: Create Directory on Remote Server
 
 on:
   push:
@@ -6,9 +6,16 @@ on:
       - main
 
 jobs:
-  display_key:
+  create_directory:
     runs-on: ubuntu-latest
     steps:
-      - name: Display SSH private key
-        run: |
-          echo '${{ secrets.SSH_PRIVATE_KEY }}'
+      - name: Connect to Remote Server and Create Directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/testingserver/
+            mkdir go
