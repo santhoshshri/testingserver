@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Sync Git Workspace with Testing Server
 
 on:
   push:
@@ -12,14 +12,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Log repository contents
-      run: ls -l $GITHUB_WORKSPACE
-
-    - name: Install rsync
-      run: sudo apt-get install rsync -y
-
-    - name: Deploy to server
+      
+    - name: Sync Git Workspace with Testing Server
       run: |
-        export RSYNC_CONNECT_PROG="echo Connecting to server: $@"
-        rsync -avz --delete -e "ssh -p 7102" $GITHUB_WORKSPACE/ root@172.21.1.91:/var/www/testingserver/
+        ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        rsync --timeout=60 -avz -e "ssh -p ${{ secrets.PORT }}" $GITWORKSPACE/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/testingserver/
+      env:
+        GITWORKSPACE: ${{ github.workspace }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
