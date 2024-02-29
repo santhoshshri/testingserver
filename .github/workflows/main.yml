@@ -1,31 +1,36 @@
-name: 'Node CI'
+name: Deploy to Server
+
 
 on:
   push:
     branches:
+      - stage
       - main
 
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Git Pull from Main
-      run: git pull origin main -f
-
-    - name: Deploy to Staging server
-      uses: easingthemes/ssh-deploy@main
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.0
       with:
-        SSH_PRIVATE_KEY: '${{ secrets.SSH_PRIVATE_KEY }}'
-        ARGS: '-rlgoDzvc -i'
-        SOURCE: 'dist/'
-        REMOTE_HOST: '${{ secrets.REMOTE_HOST }}'
-        REMOTE_USER: '${{ secrets.REMOTE_USER }}'
-        REMOTE_PORT: '${{ secrets.REMOTE_PORT }}'
-        EXCLUDE: '/dist/, /node_modules/'
-
-
+        ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
         
+    - name: Deploy to Stage
+      if: github.ref == 'refs/heads/stage'
+      run: |
+        ssh-keyscan -H ${{secrets.DEPLOY_SSH_PRIVATE_KEY}} > ~/.ssh/known_hosts
+        ssh -o StrictHostKeyChecking=no ubuntu@3.69.103.162 "mkdir -p /home/ubuntu/stage"
+        rsync -r --delete-after $GITHUB_WORKSPACE/ ubuntu@3.69.103.162:/home/ubuntu/stage/
+      
+    - name: Deploy to Prod
+      if: github.ref == 'refs/heads/main'
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@3.69.103.162 "mkdir -p /home/ubuntu/prod"
+        rsync -r --delete-after $GITHUB_WORKSPACE/ ubuntu@3.69.103.162:/home/ubuntu/prod
+        ssh -o StrictHostKeyChecking=no ubuntu@3.69.103.162 "sh /home/ubuntu/deploy.sh"
