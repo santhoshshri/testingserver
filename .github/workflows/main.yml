@@ -24,6 +24,7 @@ jobs:
     - name: Deploy to Prod
       if: github.ref == 'refs/heads/main'
       run: |
+        ssh-keyscan -H ${{secrets.SSH_PRIVATE_KEY}} > ~/.ssh/known_hosts
         ssh -o StrictHostKeyChecking=no root@172.21.1.91 "mkdir -p /var/www/testingserver1/"
         rsync -r --delete-after $GITHUB_WORKSPACE/ root@172.21.1.91:/var/www/testingserver1/
         ssh -o StrictHostKeyChecking=no root@172.21.1.91 "sh /var/www/testingserver1/"
