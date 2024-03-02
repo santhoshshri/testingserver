@@ -14,4 +14,4 @@ jobs:
         target-server: iv.com
         remote-user: root
         private-ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        destination-path: ~/var/www/testingserver/
+        destination-path: /var/www/testingserver/
