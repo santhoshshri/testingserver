@@ -27,5 +27,6 @@ jobs:
           port: 22  # Default SSH port
           script: |
             cd /var/www/testingserver/ # Change to deployment directory
+            ssh -v -i ~/.ssh/id_rsa server_user@server_ip 'echo "Connected"'
             rsync -avz --delete-after $GITHUB_WORKSPACE/ .  # Sync files from GitHub workspace to server
 
