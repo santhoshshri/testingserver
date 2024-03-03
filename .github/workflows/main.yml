@@ -22,7 +22,7 @@ jobs:
       - name: Connect to server and deploy
         uses: appleboy/ssh-action@v1.0.0  # Install this action if needed
         with:
-          host: 172.21.1.91  # Replace with server IP
+          host: iv.com  # Replace with server IP
           username: root  # Replace with server username
           port: 22  # Default SSH port
           script: |
