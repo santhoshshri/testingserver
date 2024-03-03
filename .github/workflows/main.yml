@@ -22,10 +22,10 @@ jobs:
       - name: Connect to server and deploy
         uses: appleboy/ssh-action@v1.0.0  # Install this action if needed
         with:
-          host: ${{ secrets.SERVER_IP }}  # Replace with server IP
-          username: ${{ secrets.SERVER_USER }}  # Replace with server username
+          host: 172.21.1.91  # Replace with server IP
+          username: root  # Replace with server username
           port: 22  # Default SSH port
           script: |
-            cd /var/www/testingserver  # Change to deployment directory
+            cd /var/www/testingserver/ # Change to deployment directory
             rsync -avz --delete-after $GITHUB_WORKSPACE/ .  # Sync files from GitHub workspace to server
 
