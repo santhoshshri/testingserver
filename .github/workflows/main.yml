@@ -15,8 +15,9 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          echo "$SSH_PRIVATE_KEY" | ssh-keygen id_rsa <<< "$SSH_PRIVATE_KEY"
-          chmod 600 id_rsa
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
       - name: Connect to server and deploy
         uses: appleboy/ssh-action@v1.0.0  # Install this action if needed
@@ -25,7 +26,6 @@ jobs:
           username: ${{ secrets.SERVER_USER }}  # Replace with server username
           port: 22  # Default SSH port
           script: |
-            # Replace these commands with your deployment script
-            rsync -avz -e "ssh -i id_rsa" ./ server_user@server_ip:/var/www/testingserver
-
+            cd /var/www/testingserver  # Change to deployment directory
+            rsync -avz --delete-after $GITHUB_WORKSPACE/ .  # Sync files from GitHub workspace to server
 
