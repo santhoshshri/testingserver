@@ -16,4 +16,4 @@ jobs:
       
       - name: Deploy to /var/www/html
         run: |
-          rsync -avz --delete ./ /var/www/html/
+          rsync -avz --delete ./ new/sam
