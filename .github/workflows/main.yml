@@ -14,11 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa 172.21.1.91 >> ~/.ssh/known_hosts
 
       - name: Deploy to Remote Server
         run: |
-          ssh -o StrictHostKeyChecking=no root@172.21.1.91 'sudo mkdir -p /var/www/html/go'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@172.21.1.91 'sudo mkdir -p /var/www/html/go'
