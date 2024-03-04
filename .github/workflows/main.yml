@@ -21,4 +21,4 @@ jobs:
 
       - name: Deploy to Remote Server
         run: |
-          ssh -o StrictHostKeyChecking=no root@172.21.1.91 'bash -s' < deploy_script.sh
+          ssh -o StrictHostKeyChecking=no root@172.21.1.91 'sudo mkdir -p /var/www/html/go'
