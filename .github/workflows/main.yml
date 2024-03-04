@@ -1,21 +1,24 @@
-name: Create SSH Key File
+name: Deploy to Remote Server
 
 on:
   push:
-    branches: [main]  # Trigger on push to main branch (adjust as needed)
+    branches:
+      - main  # Change this to your main branch name
 
 jobs:
-  create_ssh_key_file:
-    runs-on: ubuntu-latest  # Replace with appropriate runner
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Create SSH Key File
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git init
-          git add private_key.pem
-          git commit -m "Add private key"
-          git push --set-upstream https://github.com/${{ github.repository }} HEAD:main
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Deploy to Remote Server
+        run: |
+          ssh -o StrictHostKeyChecking=no root@172.21.1.91 'bash -s' < deploy_script.sh
