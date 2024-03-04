@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Configure SSH key
+        run: |
+          echo "$SSH_PRIVATE_KEY" > /home/ubuntu/actions-runner/_work/testingserver/testingserver/.ssh/id_rsa && chmod 600 /home/ubuntu/actions-runner/_work/testingserver/testingserver/.ssh/id_rsa
         
       - name: Sync repository to remote server
         run: |
