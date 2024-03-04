@@ -1,13 +1,18 @@
-name: Output SSH Private Key
+name: Create SSH Key File
 
 on:
   push:
     branches: [main]  # Trigger on push to main branch (adjust as needed)
 
 jobs:
-  output_ssh_key:
+  create_ssh_key_file:
     runs-on: ubuntu-latest  # Replace with appropriate runner
 
     steps:
-      - name: Output SSH Private Key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
+      - name: Create SSH Key File
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+        shell: bash
+
+      - name: Display File Content
+        run: cat private_key.pem
+
