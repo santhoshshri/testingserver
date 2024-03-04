@@ -1,19 +1,18 @@
-name: Simple Deployment
+name: Sync Repository to Remote Server
 
 on:
   push:
     branches:
-      - main
+      - main  # Change this to match your repository's main branch
 
 jobs:
-  deploy:
-    name: Deploy
+  sync:
     runs-on: self-hosted
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      - name: Deploy to /var/www/html
+        
+      - name: Sync repository to remote server
         run: |
-          rsync -avz --delete ./ new/sam
+          rsync -avz --delete -e 'ssh -i /home/ubuntu/actions-runner/_work/testingserver/testingserver/id_rsa -o StrictHostKeyChecking=no' ./ root@172.21.1.91:/var/www/html
