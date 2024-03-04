@@ -26,5 +26,5 @@ jobs:
 
       - name: Deploy to Stage
         run: |
-          rsync -r --delete-after $GITHUB_WORKSPACE/ -e "ssh -i ${{ secrets.SSH_PRIVATE_KEY }}" ubuntu@ec2-13-49-230-188.eu-north-1.compute.amazonaws.com:/home/ubuntu/stage/      
+          rsync -r --delete-after $GITHUB_WORKSPACE/ -e "ssh -i $HOME/.ssh/id_rsa" ubuntu@ec2-13-49-230-188.eu-north-1.compute.amazonaws.com:/home/ubuntu/stage/
       
