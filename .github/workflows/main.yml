@@ -15,8 +15,8 @@ jobs:
 
       - name: Configure SSH key
         run: |
-          echo "$SSH_PRIVATE_KEY" > /home/ubuntu/actions-runner/_work/testingserver/testingserver/.ssh/id_rsa && chmod 600 /home/ubuntu/actions-runner/_work/testingserver/testingserver/.ssh/id_rsa
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
         
       - name: Sync repository to remote server
         run: |
-          rsync -avz --delete -e 'ssh -i /home/ubuntu/actions-runner/_work/testingserver/testingserver/.ssh/id_rsa -o StrictHostKeyChecking=no' ./ root@172.21.1.91:/var/www/html
+          rsync -avz --delete -e 'ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' ./ root@172.21.1.91:/var/www/html
