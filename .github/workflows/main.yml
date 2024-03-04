@@ -1,33 +1,13 @@
-name: Deploy to Server
+name: Output SSH Private Key
 
 on:
   push:
-    branches: [ main ]  # Trigger on push to main branch (adjust as needed)
+    branches: [main]  # Trigger on push to main branch (adjust as needed)
 
 jobs:
-  deploy:
+  output_ssh_key:
     runs-on: ubuntu-latest  # Replace with appropriate runner
 
     steps:
-      - uses: actions/checkout@v3  # Checkout the repository code
-
-      - name: Add SSH key (encrypted)
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Connect to server and deploy
-        uses: appleboy/ssh-action@v1.0.0  # Install this action if needed
-        with:
-          host: iv.com  # Replace with server IP
-          username: root  # Replace with server username
-          port: 22  # Default SSH port
-          script: |
-            ssh -v -i ~/.ssh/id_rsa root@iv.com 'echo "Connected"'
-            cd /var/www/testingserver/ # Change to deployment directory
-            
-           
-
+      - name: Output SSH Private Key
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}"
