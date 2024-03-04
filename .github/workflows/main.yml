@@ -15,4 +15,4 @@ jobs:
         
       - name: Sync repository to remote server
         run: |
-          rsync -avz --delete -e 'ssh -i /home/ubuntu/actions-runner/_work/testingserver/testingserver/id_rsa -o StrictHostKeyChecking=no' ./ root@172.21.1.91:/var/www/html
+          rsync -avz --delete -e 'ssh -i /home/ubuntu/actions-runner/_work/testingserver/testingserver/.ssh/id_rsa -o StrictHostKeyChecking=no' ./ root@172.21.1.91:/var/www/html
