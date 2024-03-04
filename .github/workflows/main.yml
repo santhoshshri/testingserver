@@ -1,22 +1,26 @@
-name: Sync Repository to Remote Server
+name: Deploy to Server
 
 on:
   push:
     branches:
-      - main  # Change this to match your repository's main branch
+      - main
 
 jobs:
-  sync:
-    runs-on: self-hosted
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Configure SSH key
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Stage
+        if: github.ref == 'refs/heads/stage'
         run: |
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-        
-      - name: Sync repository to remote server
-        run: |
-          rsync -avz --delete -e 'ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' ./ root@172.21.1.91:/var/www/html
+          ssh-keyscan -H 13.49.230.188 >> ~/.ssh/known_hosts
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@ec2-13-49-230-188.eu-north-1.compute.amazonaws.com "mkdir -p /home/ubuntu/stage"
+          rsync -r --delete-after $GITHUB_WORKSPACE/ -e "ssh -i ${{ secrets.SSH_PRIVATE_KEY }}" ubuntu@ec2-13-49-230-188.eu-north-1.compute.amazonaws.com:/home/ubuntu/stage/
