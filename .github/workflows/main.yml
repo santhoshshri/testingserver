@@ -19,7 +19,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa 172.21.1.91 >> ~/.ssh/known_hosts
 
       - name: Deploy to Remote Server
         run: |
